@@ -9,25 +9,27 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class RecoveryRoomService {
 
-	private RecoveryRoomRepository repository;
-
 	@Autowired
-	public RecoveryRoomService(RecoveryRoomRepository repository) {
-		this.repository = repository;
-	}
+	private RecoveryRoomRepository recoveryRoomRepository;
+	
+	@Transactional
     public List<RecoveryRoom> getAll(){
-        return repository.findAll();
+        return recoveryRoomRepository.findAll();
     }
 
     public List<RecoveryRoomType> getAllRecoveryRoomTypes() {
-        return repository.findAllRecoveryRoomTypes();
+        return recoveryRoomRepository.findAllRecoveryRoomTypes();
     }
 
     public RecoveryRoomType getRecoveryRoomType(String typeName) {
-        return repository.getRecoveryRoomType(typeName);
+        return recoveryRoomRepository.getRecoveryRoomType(typeName);
     }
 
-    @Transactional(rollbackFor = DuplicatedRoomNameException.class)
+    public RecoveryRoom save(RecoveryRoom p) {
+        return recoveryRoomRepository.save(p);       
+    }
+
+/*  @Transactional(rollbackFor = DuplicatedRoomNameException.class)
     public RecoveryRoom save(RecoveryRoom p) throws DuplicatedRoomNameException {
     	RecoveryRoom room = repository.findByName(p.getName());
     	if (room == null) {
@@ -35,5 +37,5 @@ public class RecoveryRoomService {
     	} else {
     		throw new DuplicatedRoomNameException();
     	}        
-    }
+    }   */
 }

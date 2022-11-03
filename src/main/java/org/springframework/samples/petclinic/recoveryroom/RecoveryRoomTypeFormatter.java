@@ -8,10 +8,14 @@ import org.springframework.format.Formatter;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RecoveryRoomTypeFormatter implements Formatter<RecoveryRoomType>{
+public class RecoveryRoomTypeFormatter implements Formatter<RecoveryRoomType> {
 
+	RecoveryRoomService recoveryRoomService;
+	
 	@Autowired
-	private RecoveryRoomService recoveryRoomService;
+	public RecoveryRoomTypeFormatter(RecoveryRoomService recoveryRoomService) {
+		this.recoveryRoomService = recoveryRoomService;
+	}
 	
     @Override
     public String print(RecoveryRoomType object, Locale locale) {
@@ -20,12 +24,11 @@ public class RecoveryRoomTypeFormatter implements Formatter<RecoveryRoomType>{
 
     @Override
     public RecoveryRoomType parse(String text, Locale locale) throws ParseException {
-    	RecoveryRoomType recoveryRoomType = recoveryRoomService.getRecoveryRoomType(text);
-    	if (recoveryRoomType != null) {
-    		return recoveryRoomType;
+    	RecoveryRoomType recoveryRoomType = this.recoveryRoomService.getRecoveryRoomType(text);
+    	if (recoveryRoomType == null) {
+    		throw new ParseException("Recovery room not found:" + text, 0);
     	} else {
-    		throw new ParseException("Este tipo de sala" + text + " ya no se encuentra.", 0);
+    		return recoveryRoomType;
     	}
-    }
-    
+    }  
 }
